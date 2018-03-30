@@ -40,4 +40,4 @@ Thumbs.db
 /.recommenders/
 /LOG_PATH_IS_UNDEFINED/
 *.iml
-/.idea/
+.idea/*
