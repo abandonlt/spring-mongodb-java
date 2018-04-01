@@ -99,6 +99,4 @@ public class SpringDriverTest {
         System.out.println("------------------");
         logger.info(users.toString());
     }
-
-    
 }
