@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.xsd">
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	   xmlns:context="http://wwww.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.10.xsd
+http://wwww.springframework.org/schema/context
+http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd ">
 
-	<!-- <context:property-placeholder location="classpath:/com/myapp/mongodb/config/mongo.properties" 
-		/> -->
+	<!--<context:property-placeholder location="classpath:/com/myapp/mongodb/config/mongo.properties"/>-->
+	<context:component-scan base-package="com.pluto.mongodb.config"></context:component-scan>
 	<!-- mongodb连接池配置 -->
 	<mongo:mongo-client host="192.168.1.142" port="27022">
-		<mongo:client-options 
-		      write-concern="ACKNOWLEDGED"
-		      connections-per-host="100"
-		      threads-allowed-to-block-for-connection-multiplier="5"
-		      max-wait-time="120000"
-			  connect-timeout="10000"/> 
+		<mongo:client-options
+				write-concern="ACKNOWLEDGED"
+				connections-per-host="100"
+				threads-allowed-to-block-for-connection-multiplier="5"
+				max-wait-time="120000"
+				connect-timeout="10000"/>
 	</mongo:mongo-client>
-	
+
 	<!-- mongodb数据库工厂配置 -->
-	<mongo:db-factory dbname="lison" mongo-ref="mongo" />
-	
- 	<mongo:mapping-converter base-package="com.dongnao.mongodb.entity">
-	  <mongo:custom-converters>
-	      <mongo:converter>
-	        <bean class="com.dongnao.mongo.convert.BigDecimalToDecimal128Converter"/>
-	      </mongo:converter>
-	      <mongo:converter>
-	        <bean class="com.dongnao.mongo.convert.Decimal128ToBigDecimalConverter"/>
-	      </mongo:converter>
-    </mongo:custom-converters>
-	
+	<mongo:db-factory dbname="pluto" mongo-ref="mongo"/>
+
+	<mongo:mapping-converter base-package="com.dongnao.mongodb.entity">
+		<mongo:custom-converters>
+			<mongo:converter>
+				<bean class="com.dongnao.mongo.convert.BigDecimalToDecimal128Converter"/>
+			</mongo:converter>
+			<mongo:converter>
+				<bean class="com.dongnao.mongo.convert.Decimal128ToBigDecimalConverter"/>
+			</mongo:converter>
+		</mongo:custom-converters>
+
 	</mongo:mapping-converter>
 
-    <!-- mongodb模板配置 -->
+	<!-- mongodb模板配置 -->
 	<bean id="anotherMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
-		 <!-- <constructor-arg name="mongoConverter" ref="mappingConverter"/> -->
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+		<!-- <constructor-arg name="mongoConverter" ref="mappingConverter"/> -->
 		<property name="writeResultChecking" value="EXCEPTION"></property>
 	</bean>
 </beans>
