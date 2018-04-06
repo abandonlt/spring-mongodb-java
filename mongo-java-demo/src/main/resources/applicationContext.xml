@@ -29,7 +29,7 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd ">
 				<bean class="com.dongnao.mongo.convert.BigDecimalToDecimal128Converter"/>
 			</mongo:converter>
 			<mongo:converter>
-				<bean class="com.dongnao.mongo.convert.Decimal128ToBigDecimalConverter"/>
+				<bean class="com.pluto.mongodb.converter.Decimal128ToBigDecimalConverter"/>
 			</mongo:converter>
 		</mongo:custom-converters>
 

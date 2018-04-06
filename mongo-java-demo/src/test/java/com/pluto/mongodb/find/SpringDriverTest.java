@@ -11,6 +11,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.query.Update.PushOperatorBuilder;
@@ -21,6 +23,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
@@ -98,5 +102,29 @@ public class SpringDriverTest {
         List<User> users = tempelate.find(query, User.class);
         System.out.println("------------------");
         logger.info(users.toString());
+    }
+
+    @Test
+    /*
+        db.users.aggregate([{"$match":{"username":"liosn"}},
+        {"$unwind":"$comments"},
+        {"$sort":{"comments.commentTime":-1}},
+        {"$project":{"comment":1}},
+        {"$skip":6},
+        {"$limit":3}])
+     */
+    // 如果有多种排序需求怎么处理,使用聚合
+    public void demoStep4(){
+        Aggregation aggregation = newAggregation(match(where("username").is("lison"))
+        ,unwind("comments")
+        ,sort(Direction.ASC,"comments.commentTime")
+        ,project("comment")
+        ,skip(Long.valueOf("6"))
+        ,limit(3));
+        System.out.println("---------------");
+        AggregationResults<Object> aggregate = tempelate.aggregate(aggregation, "users",	User.class);
+        System.out.println("---------------");
+        List<Object> mappedResults = aggregate.getMappedResults();
+        System.out.println(mappedResults.size());
     }
 }
