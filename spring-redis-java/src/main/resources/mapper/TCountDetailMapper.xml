@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pluto.redis.dao.TCountDetailDao">
+    <resultMap id="BaseResultMap" type="com.pluto.redis.entity.TCountDetail">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="ip" property="ip" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result property="optime" column="optime" javaType="java.util.Date"
+                jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, ip, username, optime
+  </sql>
+    <select id="getVisitCount" resultType="java.lang.Integer">
+		select count(0)
+		from t_count_detail
+ </select>
+
+    <insert id="insertVisitCount" parameterType="com.pluto.redis.entity.TCountDetail">
+    insert into t_count_detail (id, ip, username, optime)
+    values (#{id,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{optime})
+  </insert>
+
+</mapper>

@@ -1,9 +1,12 @@
 package com.pluto.mongodb.pojo;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 
+@Document(collection = "users")
 public class User {
 
     private ObjectId id;
@@ -21,6 +24,9 @@ public class User {
     private BigDecimal salary;
 
     private float lenght;
+
+    @DBRef
+    private Comments comments;
 
     public ObjectId getId() {
         return id;

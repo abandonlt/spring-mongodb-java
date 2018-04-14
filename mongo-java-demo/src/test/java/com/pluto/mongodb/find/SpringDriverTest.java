@@ -122,9 +122,19 @@ public class SpringDriverTest {
         ,skip(Long.valueOf("6"))
         ,limit(3));
         System.out.println("---------------");
-        AggregationResults<Object> aggregate = tempelate.aggregate(aggregation, "users",	User.class);
+        AggregationResults<Object> aggregate = tempelate.aggregate(aggregation, "users",	Object.class);
         System.out.println("---------------");
         List<Object> mappedResults = aggregate.getMappedResults();
         System.out.println(mappedResults.size());
+    }
+
+    @Test
+    //①注意相关的实体bean要加上注解@decoment，@dbref
+    //②spring对dbref进行了封装，发起了两次查询请求
+    public void dbRefTest(){
+        System.out.println("-------------");
+        List<User> users = tempelate.findAll(User.class);
+        System.out.println("-------------");
+        logger.info(users.toString());
     }
 }

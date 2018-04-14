@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Slice;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ import java.util.Date;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Projections.fields;
+import static com.mongodb.client.model.Projections.include;
+import static com.mongodb.client.model.Projections.slice;
 
 /**
  * Description:
@@ -76,7 +80,7 @@ public class JavaDriverTest {
      */
     @Test
     //新增评论时，使用$sort 运算符进行排序，插入评论后，再按照时间降序排序
-    public void demoStep1(){
+    public void demoStep1() {
         Bson filter = eq("username", "lison");
         Document document = new Document().append("author", "cang").append("content", "lison是我粉丝").append("commentTime", new Date());
 
@@ -87,6 +91,36 @@ public class JavaDriverTest {
         logger.info(updateOne.toString());
     }
 
+    @Test
+    //查看人员时加载最新的三条评论
+    //db.users.find({"username":"lison"},{"comments":{"$slice":[0,3]}}).pretty()
+    public void demoStep2() {
+        final List<Document> ret = new ArrayList<>();
+        Block<Document> printBlock = getBlock(ret);
+        FindIterable<Document> find = collection.find(eq("username", "lison"))
+                .projection(slice("comments", 0, 3));
+        printOperation(ret, printBlock, find);
+    }
+
+    @Test
+    //点击评论的下一页按钮，新加载三条评论
+    //db.users.find({"username":"lison"},{"comments":{"$slice":[3,3]},"$id":1}).pretty()
+    public void demeStep3(){
+        final List<Document> document = new ArrayList<>();
+        Block<Document> blockDoc = getBlock(document);
+
+        Bson filter = eq("username", "lison");
+        Bson slice = slice("comments", 3, 3);
+        Bson include = include("id");
+        Bson projection = fields(slice, include);
+
+        FindIterable<Document> find = collection.find(filter).projection(projection);
+
+        printOperation(document, blockDoc, find);
+
+    }
+
+    
     //-----------------------------------------------工具类-----------------------------------------------------------------------
     private Block<Document> getBlock(final List<Document> ret) {
         Block<Document> printBlock = new Block<Document>() {
